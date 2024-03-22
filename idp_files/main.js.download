@@ -1,0 +1,176 @@
+function Page() {
+    var self = this;
+    this.init = function () {
+        this.videoControl();
+        this.hamburgerClick();
+        this.initSlides();
+        this.footerExpand();
+        this.partnerExpand();
+        this.faqClick();
+        this.topSearchClick();
+        this.headerAnimate();
+        this.setColor();
+        this.openSearch();
+    };
+    this.videoControl = function () {
+        if ($('#example_video_1').length > 0) {
+            var video = $('#example_video_1');
+            var vid = video.get(0);
+            if ($(window).width() < 1024) {
+                vid.pause();
+            }
+            $(window).resize(function () {
+                if ($(window).width() < 1024) {
+                    vid.pause();
+                } else {
+                    vid.play();
+                }
+            });
+            $('#volume-control').on('click', function () {
+                if ($("#example_video_1").prop('muted')) {
+                    $("#example_video_1").prop('muted', false);
+                    $(this).removeClass('off');
+                } else {
+                    $("#example_video_1").prop('muted', true);
+                    $(this).addClass('off');
+                }
+            });
+        }
+    };
+    this.hamburgerClick = function () {
+        $('.hamburger-trigger, .close-icon').click(function (e) {
+            e.preventDefault();
+            $('body').stop().toggleClass('opened');
+        });
+    };
+    this.initSlides = function () {
+        var mySwiper = new Swiper('.slide--desktop .swiper-container', {
+            // Navigation arrows
+            direction: 'horizontal',
+            nextButton: '.swiper-button-next',
+            prevButton: '.swiper-button-prev'
+        });
+        var mySwiper_2 = new Swiper('.slide--tablet .swiper-container', {
+            // Navigation arrows
+            direction: 'horizontal',
+            pagination: '.swiper-pagination'
+        });
+        $('.slide--tablet .swiper-pagination-bullet').click(function () {
+            mySwiper_2.slideTo($(this).index());
+        });
+    };
+    this.footerExpand = function () {
+        $('.block-position h4').click(function () {
+            if ($(window).width() < 640) {
+                var collapseIcon = $(this).siblings('.expand-icon');
+                if (collapseIcon.hasClass('collapse--state')) {
+                    collapseIcon.removeClass('collapse--state').addClass('expand--state');
+                    collapseIcon.siblings('ul').slideDown();
+                } else {
+                    collapseIcon.removeClass('expand--state').addClass('collapse--state');
+                    collapseIcon.siblings('ul').slideUp();
+                }
+            }
+
+        });
+    };
+    this.partnerExpand = function () {
+        $('.partner-content--expand').click(function (e) {
+            e.preventDefault();
+            var full_content = $(this).parent('.partner-content--excerpt').siblings('.partner-content--full');
+            full_content.stop().slideDown();
+            $(this).hide();
+        });
+        $('.partner-content--collapse').click(function (e) {
+            e.preventDefault();
+            var full_content = $(this).parent('.partner-content--full')
+            var excerpt_content = full_content.siblings('.partner-content--excerpt');
+            full_content.stop().slideUp();
+            excerpt_content.find('.partner-content--expand').show();
+        });
+    };
+    this.faqClick = function () {
+        $('.faq--question').on('click', function (e) {
+            e.preventDefault();
+            if (!$(this).next('.faq--answer').hasClass('active')) {
+                $('.faq--answer.active').removeClass('active');
+                $(this).next('.faq--answer').stop().addClass('active');
+            } else {
+                $(this).next('.faq--answer').stop().removeClass('active');
+            }
+
+        });
+    };
+    this.topSearchClick = function () {
+        $('.top-search-button').on('click', function (e) {
+            e.preventDefault();
+            var parent = $(this).parent('li');
+            parent.stop().toggleClass('open-search');
+        });
+    }
+    this.headerAnimate = function () {
+        $(window).scroll(function () {
+            if ($(window).scrollTop() > 0) {
+                $('.top-bar').addClass('fixed');
+                $('#main-navigation-wrap').addClass('fixed');
+            } else if ($(window).scrollTop() == 0) {
+                $('.top-bar').removeClass('fixed');
+                $('#main-navigation-wrap').removeClass('fixed');
+            }
+        })
+    };
+    this.setColor = function () {
+        if ($('.set-color').length > 0) {
+            $('.set-color').each(function () {
+                console.log('a');
+                var color = $(this).data('color');
+                $(this).css({
+                    color: '#' + color
+                });
+            });
+        }
+    };
+    this.openSearch = function () {
+        $('.search-icon').on('click', function (e) {
+            e.preventDefault();
+            $('body').removeClass('opened').addClass('open-search');
+        });
+        $('.tablet-search__hamburger').on('click', function (e) {
+            e.preventDefault();
+            $('body').removeClass('open-search').addClass('opened');
+        });
+        $('.tablet-search__close').on('click', function (e) {
+            e.preventDefault();
+            $('body').removeClass('open-search');
+        });
+        $('.btn-search').on('click', function (e) {
+            e.preventDefault();
+            $('body').addClass('open-search');
+        });
+        $(window).on('scroll', function () {
+            // if ($(window).width() < 940) {
+            //     var scrollTop = $(window).scrollTop();
+            //     if (scrollTop > 30) {
+            //         $('.tablet-navigation').addClass('mobile-other');
+            //     } else {
+            //         $('.tablet-navigation').removeClass('mobile-other');
+            //     }
+            // }
+        });
+
+        $(window).resize(function(){
+            if ($(window).width() < 940) {
+                $('.tablet-navigation').addClass('mobile-other');
+            } else {
+                $('.tablet-navigation').removeClass('mobile-other');
+            }
+        });
+    }
+}
+Page = new Page();
+$(document).ready(function () {
+    Page.init();
+    new WOW().init({
+        offset: 30
+    });
+});
